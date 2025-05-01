@@ -207,8 +207,8 @@ class _HangmanGameScreenState extends State<HangmanGameScreen> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context); // Cierra diálogo
-              Navigator.pop(context); // Vuelve al menú
+              Navigator.pop(context);
+              Navigator.pop(context); 
             },
             child: Text('Volver al inicio'),
           )
