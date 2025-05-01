@@ -250,6 +250,8 @@ class _HangmanGameScreenState extends State<HangmanGameScreen> {
             SizedBox(height: 10),
             Text('Intentos restantes: $attempts', style: TextStyle(fontSize: 18)),
             SizedBox(height: 20),
+            HangmanFigure(attemptsLeft: attempts), // <-- Muñeco agregado aquí
+            SizedBox(height: 20),
             Text(displayWord.join(' '), style: TextStyle(fontSize: 32, letterSpacing: 2)),
             SizedBox(height: 30),
             buildKeyboard(),
@@ -257,5 +259,75 @@ class _HangmanGameScreenState extends State<HangmanGameScreen> {
         ),
       ),
     );
+  }
+}
+
+// Widget para el dibujo del ahorcado
+class HangmanFigure extends StatelessWidget {
+  final int attemptsLeft;
+
+  const HangmanFigure({required this.attemptsLeft});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(200, 300),
+      painter: HangmanPainter(attemptsLeft),
+    );
+  }
+}
+
+class HangmanPainter extends CustomPainter {
+  final int attemptsLeft;
+
+  HangmanPainter(this.attemptsLeft);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 4;
+
+    // Base
+    canvas.drawLine(Offset(20, size.height - 20), Offset(size.width - 20, size.height - 20), paint);
+
+    // Poste
+    canvas.drawLine(Offset(50, size.height - 20), Offset(50, 20), paint);
+
+    // Techo
+    canvas.drawLine(Offset(50, 20), Offset(size.width / 2, 20), paint);
+
+    // Cuerda
+    canvas.drawLine(Offset(size.width / 2, 20), Offset(size.width / 2, 60), paint);
+
+    if (attemptsLeft <= 5) {
+      // Cabeza
+      canvas.drawCircle(Offset(size.width / 2, 80), 20, paint);
+    }
+    if (attemptsLeft <= 4) {
+      // Cuerpo
+      canvas.drawLine(Offset(size.width / 2, 100), Offset(size.width / 2, 160), paint);
+    }
+    if (attemptsLeft <= 3) {
+      // Brazo izquierdo
+      canvas.drawLine(Offset(size.width / 2, 110), Offset(size.width / 2 - 30, 140), paint);
+    }
+    if (attemptsLeft <= 2) {
+      // Brazo derecho
+      canvas.drawLine(Offset(size.width / 2, 110), Offset(size.width / 2 + 30, 140), paint);
+    }
+    if (attemptsLeft <= 1) {
+      // Pierna izquierda
+      canvas.drawLine(Offset(size.width / 2, 160), Offset(size.width / 2 - 30, 200), paint);
+    }
+    if (attemptsLeft <= 0) {
+      // Pierna derecha
+      canvas.drawLine(Offset(size.width / 2, 160), Offset(size.width / 2 + 30, 200), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant HangmanPainter oldDelegate) {
+    return oldDelegate.attemptsLeft != attemptsLeft;
   }
 }
